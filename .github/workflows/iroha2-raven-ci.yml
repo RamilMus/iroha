@@ -34,10 +34,10 @@ jobs:
       run: raven index
 
     - name: Generate Report
-      run: raven report --queries-path raven/library --format json
+      run: raven report --queries-path raven/library --format json > raven-report.json
 
     - name: Upload Report
       uses: actions/upload-artifact@v4
       with:
         name: raven-report
-        path: raven/raven-report.json
+        path: raven-report.json
