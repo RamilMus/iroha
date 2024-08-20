@@ -38,6 +38,9 @@ jobs:
     - name: Index Workflows
       run: raven index
 
+    - name: ls
+      run: pwd && ls -la
+
     - name: Generate Report
       run: raven report --format json
 
