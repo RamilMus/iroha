@@ -11,13 +11,11 @@ jobs:
   raven-scan:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-
     - name: Clone Raven Repository
-      run: |
-        git clone https://github.com/CycodeLabs/raven.git
-        cd raven
+      run: git clone https://github.com/CycodeLabs/raven.git
+
+    - name: Cd to Raven Repository
+      run: cd raven
         
     - name: Set up Python
       uses: actions/setup-python@v3
