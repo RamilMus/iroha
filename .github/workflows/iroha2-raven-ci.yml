@@ -13,9 +13,6 @@ jobs:
     steps:
     - name: Clone Raven Repository
       run: git clone https://github.com/CycodeLabs/raven.git
-
-    - name: Cd to Raven Repository
-      run: cd raven
         
     - name: Set up Python
       uses: actions/setup-python@v3
@@ -36,11 +33,8 @@ jobs:
     - name: Index Workflows
       run: raven index
 
-    - name: ls
-      run: pwd && ls -la
-
     - name: Generate Report
-      run: raven report --format json
+      run: raven report --queries-path raven/library --format json
 
     - name: Upload Report
       uses: actions/upload-artifact@v4
