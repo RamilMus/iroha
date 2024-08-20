@@ -1,0 +1,42 @@
+name: I2::CI::Raven CI/CD Scan
+
+on:
+  workflow_dispatch:
+    inputs:
+      IROHA2_REPO:
+        required: true
+        default: hyperledger
+
+jobs:
+  raven-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.9
+
+    - name: Install Raven
+      run: pip3 install raven-cycode
+
+    - name: Set up Redis and Neo4j
+      run: |
+        docker run -d --name raven-neo4j -p7474:7474 -p7687:7687 --env NEO4J_AUTH=neo4j/123456789 --volume raven-neo4j:/data neo4j:5.12
+        docker run -d --name raven-redis -p6379:6379 --volume raven-redis:/data redis:7.2.1
+
+    - name: Download Workflows
+      run: raven download account --token ${{ secrets.GITHUB_TOKEN }} --account-name ${{ github.event.inputs.IROHA2_REPO }}
+    - name: Index Workflows
+      run: raven index
+
+    - name: Generate Report
+      run: raven report --format raw
+
+    - name: Upload Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: raven-report
+        path: ./raven-report.txt
