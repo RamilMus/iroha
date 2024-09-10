@@ -5,14 +5,14 @@ on:
     inputs:
       IROHA2_REPO:
         required: true
-        default: hyperledger
+        default: hyperledger/iroha
 
 jobs:
   raven-scan:
     runs-on: ubuntu-latest
     steps:
     - name: Clone Raven Repository
-      run: git clone https://github.com/CycodeLabs/raven.git
+      run: git clone https://github.com/sadreck/raven.git
         
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -28,7 +28,7 @@ jobs:
         docker run -d --name raven-redis -p6379:6379 --volume raven-redis:/data redis:7.2.1
   
     - name: Download Workflows
-      run: raven download account --token ${{ secrets.GITHUB_TOKEN }} --account-name ${{ github.event.inputs.IROHA2_REPO }}
+      run: raven download account --token ${{ secrets.GITHUB_TOKEN }} --repo-name ${{ github.event.inputs.IROHA2_REPO }}
 
     - name: Index Workflows
       run: raven index
