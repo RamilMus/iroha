@@ -28,7 +28,7 @@ jobs:
         docker run -d --name raven-redis -p6379:6379 --volume raven-redis:/data redis:7.2.1
   
     - name: Download Workflows
-      run: raven download account --token ${{ secrets.GITHUB_TOKEN }} --repo-name ${{ github.event.inputs.IROHA2_REPO }}
+      run: raven download repo --token ${{ secrets.GITHUB_TOKEN }} --debug --clean-redis --repo-name ${{ github.event.inputs.IROHA2_REPO }}
 
     - name: Index Workflows
       run: raven index
