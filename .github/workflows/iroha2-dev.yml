@@ -49,7 +49,7 @@ jobs:
       image: hyperledger/iroha2-ci:nightly-2024-04-18
     steps:
       - uses: actions/checkout@v4
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@v2.7.3
       - name: Build
         run: mold --run cargo build --release --verbose
       - name: Archive iroha
@@ -85,7 +85,7 @@ jobs:
       image: hyperledger/iroha2-ci:nightly-2024-04-18
     steps:
       - uses: actions/checkout@v4
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@v2.7.3
       - name: Run debug tests and save telemetry
         env:
           TELEMETRY_FILE: ../target/telemetry/debug.json.lz4
