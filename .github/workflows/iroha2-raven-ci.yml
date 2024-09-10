@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Clone Raven Repository
-      run: git clone https://github.com/sadreck/raven.git
+      run: git clone --branch feature_single_repo https://github.com/sadreck/raven.git
         
     - name: Set up Python
       uses: actions/setup-python@v5
