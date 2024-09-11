@@ -39,9 +39,10 @@ jobs:
           install: true
       - name: Test docker-compose.single.yml
         run: |
-          docker compose -f ${{ env.DOCKER_COMPOSE_PATH }}/docker-compose.single.yml up --wait
-          docker logs defaults-test-1 || true
+          docker compose -f ${{ env.DOCKER_COMPOSE_PATH }}/docker-compose.single.yml up --wait || exit 1
           docker compose -f ${{ env.DOCKER_COMPOSE_PATH }}/docker-compose.single.yml down
       - name: Wipe docker-compose.yml containers
         if: always()
-        run: docker compose -f ${{ env.DOCKER_COMPOSE_PATH }}/docker-compose.yml down
+        run: |
+          docker logs defaults-test-1 || true
+          docker compose -f ${{ env.DOCKER_COMPOSE_PATH }}/docker-compose.yml down
