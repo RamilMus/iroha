@@ -36,7 +36,7 @@ jobs:
     - name: Update Query in checking node version lib file
       run: |
         # Replace the specific line in the query_usage_of_outdated_node.yml
-        sed -i 's/WHERE ca.using = "node12"/WHERE ca.using =~ "node([0-9]{2})" AND (TOINTEGER(SUBSTRING(ca.using, 4)) < 20 OR TOINTEGER(SUBSTRING(ca.using, 4)) % 2 = 1)/' raven/library/query_usage_of_outdated_node.yml
+        sed -i 's/WHERE ca.using = "node12"/WHERE ca.using =~ "node([0-9]{2})" AND (TOINTEGER(SUBSTRING(ca.using, 4)) < 24 OR TOINTEGER(SUBSTRING(ca.using, 4)) % 2 = 1)/' raven/library/query_usage_of_outdated_node.yml
 
     - name: cat yaml file
       run: cat raven/library/query_usage_of_outdated_node.yml
