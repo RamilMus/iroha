@@ -38,6 +38,9 @@ jobs:
         # Replace the specific line in the query_usage_of_outdated_node.yml
         sed -i 's/WHERE ca.using = "node12"/WHERE ca.using =~ "node([0-9]{2})" AND TOINTEGER(SUBSTRING(ca.using, 4)) < 18 OR TOINTEGER(SUBSTRING(ca.using, 4)) % 2 = 1/' raven/library/query_usage_of_outdated_node.yml
 
+    - name: cat yaml file
+      run: cat raven/library/query_usage_of_outdated_node.yml
+
     - name: Generate Report
       run: raven report --queries-path raven/library --format json > raven-report.json
 
