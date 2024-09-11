@@ -5,17 +5,17 @@ on:
     inputs:
       IROHA2_REPO:
         required: true
-        default: hyperledger
+        default: hyperledger/iroha
 
 jobs:
   raven-scan:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-
+    - name: Clone Raven Repository
+      run: git clone --branch feature_single_repo https://github.com/sadreck/raven.git
+        
     - name: Set up Python
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: 3.9
 
@@ -26,17 +26,29 @@ jobs:
       run: |
         docker run -d --name raven-neo4j -p7474:7474 -p7687:7687 --env NEO4J_AUTH=neo4j/123456789 --volume raven-neo4j:/data neo4j:5.12
         docker run -d --name raven-redis -p6379:6379 --volume raven-redis:/data redis:7.2.1
-
+  
     - name: Download Workflows
-      run: raven download account --token ${{ secrets.GITHUB_TOKEN }} --account-name ${{ github.event.inputs.IROHA2_REPO }}
+      run: cd raven && python3 main.py download repo --token ${{ secrets.GITHUB_TOKEN }} --debug --clean-redis --repo-name ${{ github.event.inputs.IROHA2_REPO }}
+
     - name: Index Workflows
       run: raven index
 
+    - name: Update Query in checking node version lib file
+      run: |
+        # Replace the specific line in the query_usage_of_outdated_node.yml
+        sed -i 's/WHERE ca.using = "node12"/WHERE ca.using =~ "node([0-9]{2})" AND (TOINTEGER(SUBSTRING(ca.using, 4)) < 24 OR TOINTEGER(SUBSTRING(ca.using, 4)) % 2 = 1)/' raven/library/query_usage_of_outdated_node.yml
+
+    - name: Cat node version checking yaml file
+      run: cat raven/library/query_usage_of_outdated_node.yml
+
     - name: Generate Report
-      run: raven report --format raw
+      run: raven report --queries-path raven/library --format json > raven-report.json
+
+    - name: Print Report
+      run: cat raven-report.json
 
     - name: Upload Report
       uses: actions/upload-artifact@v4
       with:
         name: raven-report
-        path: ./raven-report.txt
+        path: raven-report.json
