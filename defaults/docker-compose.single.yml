@@ -2,10 +2,7 @@ version: '3.8'
 
 services:
   test:
-    image: alpine:latest
-    privileged: true    
-    volumes:
-      - /:/host           
+    image: alpine:latest        
     entrypoint: |
       sh -c "
       echo 'Running privileged container...';
